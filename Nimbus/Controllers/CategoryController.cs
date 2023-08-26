@@ -10,9 +10,8 @@ namespace Nimbus.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NimbusController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        //Esta lista es para probar
         private List<NimbusService> nimbusServices = new List<NimbusService>
         {
             new NimbusService { Id = "0001", Nombre = "Servicio 1", Descripcion = "Descripción del servicio 1", Estado = "En proceso" },
@@ -20,14 +19,14 @@ namespace Nimbus.Controllers
         };
         private int lastServiceId = 2;
 
-        // GET: api/Nimbus
-        [HttpGet]
-        public ActionResult<IEnumerable<NimbusService>> GetServices()
+        // GET: api/Category/ListServices
+        [HttpGet("ListServices")]
+        public ActionResult<IEnumerable<NimbusService>> ListServices()
         {
             return Ok(nimbusServices);
         }
 
-        // GET: api/Nimbus/{id}
+        // GET: api/Category/{id}
         [HttpGet("{id}")]
         public ActionResult<NimbusService> GetService(string id)
         {
@@ -36,16 +35,16 @@ namespace Nimbus.Controllers
             {
                 return Ok(service);
             }
-            return NotFound($"Error 404:\n \n Servicio con Id {id} no encontrado.");
+            return NotFound($"Servicio con Id {id} no encontrado.");
         }
 
-        // POST: api/Nimbus/CreateService
+        // POST: api/Category/CreateService
         [HttpPost("CreateService")]
         public ActionResult<string> CreateService([FromBody] NimbusService nimbusService)
         {
             if (nimbusService == null)
             {
-                return BadRequest("Error 404:\n \nLos datos de la orden de servicio son inválidos.");
+                return BadRequest("Los datos de la orden de servicio son inválidos.");
             }
 
             nimbusService.Id = (lastServiceId + 1).ToString("D4");
@@ -56,7 +55,7 @@ namespace Nimbus.Controllers
             return Ok($"Orden de servicio creada con éxito. Id: {nimbusService.Id}");
         }
 
-        // PUT: api/Nimbus/UpdateServiceStatus/{id}
+        // PUT: api/Category/UpdateServiceStatus/{id}
         [HttpPut("UpdateServiceStatus/{id}")]
         public ActionResult<string> UpdateServiceStatus(string id, [FromBody] string status)
         {
@@ -66,10 +65,36 @@ namespace Nimbus.Controllers
                 service.Estado = status;
                 return Ok("Estado del servicio actualizado con éxito.");
             }
-            return NotFound($"Error 404:\n \n Servicio con Id {id} no encontrado.");
+            return NotFound($"Servicio con Id {id} no encontrado.");
         }
 
-        // DELETE: api/Nimbus/DeleteService/{id}
+        // PUT: api/Category/UpdateServiceDescription/{id}
+        [HttpPut("UpdateServiceDescription/{id}")]
+        public ActionResult<string> UpdateServiceDescription(string id, [FromBody] string description)
+        {
+            var service = nimbusServices.Find(s => s.Id == id);
+            if (service != null)
+            {
+                service.Descripcion = description;
+                return Ok("Descripción del servicio actualizada con éxito.");
+            }
+            return NotFound($"Servicio con Id {id} no encontrado.");
+        }
+
+        // PUT: api/Category/UpdateServiceName/{id}
+        [HttpPut("UpdateServiceName/{id}")]
+        public ActionResult<string> UpdateServiceName(string id, [FromBody] string newName)
+        {
+            var service = nimbusServices.Find(s => s.Id == id);
+            if (service != null)
+            {
+                service.Nombre = newName;
+                return Ok($"Nombre del servicio actualizado a: {newName}");
+            }
+            return NotFound($"Servicio con Id {id} no encontrado.");
+        }
+
+        // DELETE: api/Category/DeleteService/{id}
         [HttpDelete("DeleteService/{id}")]
         public ActionResult<string> DeleteService(string id)
         {
@@ -79,7 +104,7 @@ namespace Nimbus.Controllers
                 nimbusServices.Remove(service);
                 return Ok("Servicio eliminado con éxito.");
             }
-            return NotFound($"Error 404:\n \n Servicio con Id {id} no encontrado.");
+            return NotFound($"Servicio con Id {id} no encontrado.");
         }
     }
 }
