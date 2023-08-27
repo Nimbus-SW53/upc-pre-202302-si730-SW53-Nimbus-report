@@ -16,7 +16,7 @@ namespace Nimbus.Controllers
             new NimbusSubscriptions{Id = 2, UserId = "0002", IsValid = false, StartDate = new DateTime(2023, 4, 12), EndDate = new DateTime(2023, 7, 11)}
         };
 
-        // ... other actions ...
+        // ... otras acciones ...
 
         // POST: api/Subscriptions/Pay/{id}
         [HttpPost("Pay/{id}")]
@@ -28,11 +28,12 @@ namespace Nimbus.Controllers
             {
                 if (subscription != null && subscription.IsValid)
                 {
-                    // Simulate a payment process
-                    // You can implement your actual payment logic here
+                    // Simulamos un proceso de pago
+                    // Puedes implementar tu logica de pago aqui
 
-                    // For the sake of example, let's assume the payment was successful
-                    subscription.IsValid = true; // Set subscription as valid after successful payment
+                    // Para dar un ejemplo, Asumamos que el pago fue satisfactorio
+
+                    subscription.IsValid = true; //Configuramos la subscripcion como valida despues de recibir el pago exitosamente.
                     return StatusCode(200, "Payment successful. Subscription is now valid.");
                 }
                 else if (subscription != null && !subscription.IsValid)
@@ -50,6 +51,6 @@ namespace Nimbus.Controllers
             }
         }
 
-        // ... other actions ...
+        // ... Otras acciones ...
     }
 }
